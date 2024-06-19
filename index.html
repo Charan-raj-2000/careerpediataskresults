@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6B73FF 10%, #000DFF 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+        }
+        input {
+            padding: 10px;
+            margin-right: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: calc(100% - 130px);
+            max-width: 200px;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #6B73FF;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #6B73FF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #5a62e0;
+        }
+        #student-details {
+            margin-top: 20px;
+            text-align: left;
+        }
+        #student-details h2 {
+            margin-bottom: 10px;
+        }
+        #student-details ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #student-details li {
+            background: #f0f0f0;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        #student-details li:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Results (1-5)</h1>
+        <input type="text" id="student-id" placeholder="Enter Student ID">
+        <button onclick="fetchStudentDetails()">Click here</button>
+        <div id="student-details"></div>
+    </div>
+    <script>
+		const students = [
+    {
+        "id": "CPB02001",
+        "name": "Sathyanarayana Yalla",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02002",
+        "name": "Gokul P",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02003",
+        "name": "Akhilesh Chavan\u00a0",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02004",
+        "name": "Kiran Kumar Addakula",
+        "marks": {
+            "Task-1": 5,
+            "Remarks 1": "Columns did not meet the specified requirements.\nThe presentation of the document needs improvement.\nThe summary contains irrelevant information.",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 9,
+            "Remarks 3": "Very impressive",
+            "Task-4": 8,
+            "Remarks 4": "Well done!",
+            "Task-5": 9,
+            "Remarks 5": "Very impressive"
+        }
+    },
+    {
+        "id": "CPB02005",
+        "name": "Ravi T",
+        "marks": {
+            "Task-1": 3,
+            "Remarks 1": "The requirements are not mentioned in the file.\nThe data lacks an explanation of its features.\nThe presentation of the data needs improvement.",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 6,
+            "Remarks 3": "Presentation of document could have been improved more\nKeep up the good work!",
+            "Task-4": 0,
+            "Remarks 4": "You've submitted the task 3 for task 4",
+            "Task-5": 0,
+            "Remarks 5": "NO Task in the Drive link"
+        }
+    },
+    {
+        "id": "CPB02006",
+        "name": "Ankitha C\u00a0",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02007",
+        "name": "Charan raj",
+        "marks": {
+            "Task-1": 9,
+            "Remarks 1": "Very impressive",
+            "Task-2": 8,
+            "Remarks 2": "Well done!",
+            "Task-3": 8,
+            "Remarks 3": "Well done!",
+            "Task-4": 8,
+            "Remarks 4": "Well done!",
+            "Task-5": 8,
+            "Remarks 5": "Well done!"
+        }
+    },
+    {
+        "id": "CPB02008",
+        "name": "P shruthi",
+        "marks": {
+            "Task-1": 7,
+            "Remarks 1": "Well done",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 10,
+            "Remarks 3": "Very impressive",
+            "Task-4": 7,
+            "Remarks 4": "Well done!",
+            "Task-5": 9,
+            "Remarks 5": "Very impressive"
+        }
+    },
+    {
+        "id": "CPB02009",
+        "name": "Narendra",
+        "marks": {
+            "Task-1": 6,
+            "Remarks 1": "Features of data did not explained properly\nThe presentation of the document needs improvement\nKeep up the good work!",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 7,
+            "Remarks 3": "Well done!",
+            "Task-4": 6,
+            "Remarks 4": "Did not mentioned the steps of Data cleaning\nPresentation of document could have been improved more.\nKeep up the good work!",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02010",
+        "name": "Chiranjeevi",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02011",
+        "name": "Sravanthi",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02012",
+        "name": "Jashwanth",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02013",
+        "name": "Madhuri",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02014",
+        "name": "M. Guru Nithin",
+        "marks": {
+            "Task-1": 7,
+            "Remarks 1": "Well done",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 7,
+            "Remarks 3": "Well done!",
+            "Task-4": 8,
+            "Remarks 4": "Well done!",
+            "Task-5": 9,
+            "Remarks 5": "Very impressive"
+        }
+    },
+    {
+        "id": "CPB02015",
+        "name": "K.sairam",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02016",
+        "name": "K. Shiva krishna",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02017",
+        "name": "Satyagopal pakki",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02018",
+        "name": "D. Tejaswi",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02019",
+        "name": "Salman Raj Veeranki",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02020",
+        "name": "V.Santosh\u00a0",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02021",
+        "name": "Shruthi",
+        "marks": {
+            "Task-1": 6,
+            "Remarks 1": "Keep up the good work!",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 5,
+            "Remarks 3": "Keep up the good work! But you have not create the coding part of pandas Assignment",
+            "Task-4": 8,
+            "Remarks 4": "Well done!",
+            "Task-5": 9,
+            "Remarks 5": "Very impressive"
+        }
+    },
+    {
+        "id": "CPB02022",
+        "name": "Sazia",
+        "marks": {
+            "Task-1": 7,
+            "Remarks 1": "Well done",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 7,
+            "Remarks 3": "Well done!",
+            "Task-4": 7,
+            "Remarks 4": "Well done!",
+            "Task-5": 7,
+            "Remarks 5": "Well done!"
+        }
+    },
+    {
+        "id": "CPB02023",
+        "name": "Balnars",
+        "marks": {
+            "Task-1": 4,
+            "Remarks 1": "The size of the data could be increased to enhance analysis",
+            "Task-2": 0,
+            "Remarks 2": "Malpractice",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02024",
+        "name": "Siva Shankar",
+        "marks": {
+            "Task-1": 6,
+            "Remarks 1": "presentation is not up to the mark \nKeep up the good work!",
+            "Task-2": 0,
+            "Remarks 2": "Malpractice",
+            "Task-3": 5,
+            "Remarks 3": "Keep up the good work! Some data cleaning concepts are missing",
+            "Task-4": 7,
+            "Remarks 4": "Well done!",
+            "Task-5": 9,
+            "Remarks 5": "Very impressive"
+        }
+    },
+    {
+        "id": "CPB02025",
+        "name": "Prasanna",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02026",
+        "name": "sai teja",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02027",
+        "name": "Bhavyasree",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02028",
+        "name": "Pratyusha",
+        "marks": {
+            "Task-1": 7,
+            "Remarks 1": "Well done",
+            "Task-2": 6,
+            "Remarks 2": "More may have been included to the summary",
+            "Task-3": 5,
+            "Remarks 3": "Although the data has been cleaned, more adjustments are required.",
+            "Task-4": 8,
+            "Remarks 4": "Well done!",
+            "Task-5": 9,
+            "Remarks 5": "Very impressive"
+        }
+    },
+    {
+        "id": "CPB02029",
+        "name": "sai kumar",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02030",
+        "name": "Manjunath",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02031",
+        "name": "Somendra Sai. M",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02032",
+        "name": "Amargonda Srinivas",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Did not gave request access to the mentors",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 0,
+            "Remarks 3": "Did not gave request access to the mentors",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 6,
+            "Remarks 5": "conclusion of the dashboard is missing\nKeep up the good work!"
+        }
+    },
+    {
+        "id": "CPB02033",
+        "name": "Uday Krishna",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02034",
+        "name": "Shaik Baji",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02035",
+        "name": "Guruvender Singh",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02036",
+        "name": "Suchith",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02037",
+        "name": "Ithihas",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Remarks 2": "Keep up the good work!",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02038",
+        "name": "Anudeep",
+        "marks": {
+            "Task-1": 7,
+            "Remarks 1": "Well done",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 8,
+            "Remarks 3": "Well done!",
+            "Task-4": 3,
+            "Remarks 4": "1. Did not perform any data cleaning.\n2. Did not conduct any Exploratory Data Analysis (EDA).\n3. Only loaded the data and removed the missing values.",
+            "Task-5": 9,
+            "Remarks 5": "Very impressive"
+        }
+    },
+    {
+        "id": "CPB02039",
+        "name": "Abrar",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02040",
+        "name": "Yadav Kumar",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02041",
+        "name": "Vishwas",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02042",
+        "name": "Nijamuddin",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02043",
+        "name": "Vikhil",
+        "marks": {
+            "Task-1": 3,
+            "Remarks 1": "Types and uses of EDA did not found! Presentation of the document is not upto the mark. keep up the good work.!",
+            "Task-2": 4,
+            "Remarks 2": "The data provided is too minimal.\nThe documentation is not presented in a proper manner.",
+            "Task-3": 8,
+            "Remarks 3": "Well done!",
+            "Task-4": 7,
+            "Remarks 4": "Well done!",
+            "Remarks 5": "Access issue"
+        }
+    },
+    {
+        "id": "CPB02044",
+        "name": "Sravan",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02045",
+        "name": "Tulasi Venkata Swamy",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02046",
+        "name": "Pavankumar Sunkara",
+        "marks": {
+            "Task-1": 6,
+            "Remarks 1": "Presentation of the document is not upto the mark.\nkeep up the good work.!",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02047",
+        "name": "Akkala Kiran Kumar",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02048",
+        "name": "G. Kiran Kumar",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02049",
+        "name": "Vadla Srinivas Chary",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02050",
+        "name": "Batti Maruthi Goud",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02051",
+        "name": "P. Karun Kumar",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02052",
+        "name": "N. Charan",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02053",
+        "name": "Giridhar Reddy",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Access not given",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 9,
+            "Remarks 3": "Very impressive",
+            "Task-4": 7,
+            "Remarks 4": "Well done!",
+            "Task-5": 7,
+            "Remarks 5": "Well done!"
+        }
+    },
+    {
+        "id": "CPB02054",
+        "name": "HARSHA",
+        "marks": {
+            "Task-1": 7,
+            "Remarks 1": "Well done",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 9,
+            "Remarks 3": "Very impressive",
+            "Task-4": 7,
+            "Remarks 4": "Well done!",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02055",
+        "name": "Suresh kotla",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted",
+            "Task-2": 0,
+            "Remarks 2": "Not submitted",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02056",
+        "name": "T.Srinivas ",
+        "marks": {
+            "Task-1": 7,
+            "Remarks 1": "Well done",
+            "Task-2": 8,
+            "Remarks 2": "Well done!",
+            "Task-3": 8,
+            "Remarks 3": "Well done!",
+            "Task-4": 0,
+            "Remarks 4": "Not submitted",
+            "Task-5": 0,
+            "Remarks 5": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02057",
+        "name": "Dattesh",
+        "marks": {
+            "Task-1": 8,
+            "Remarks 1": "Well done",
+            "Task-2": 9,
+            "Remarks 2": "Very impressive",
+            "Task-3": 10,
+            "Remarks 3": "Very impressive"
+        }
+    },
+    {
+        "id": "CPB02058",
+        "name": "Milli Beena",
+        "marks": {
+            "Task-1": 1,
+            "Remarks 1": "Only the dataset has been uploaded; the documentation is missing.\nThe features of the data are not explained.\nThe presentation of the data needs improvement.",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02059",
+        "name": "M.Praveen",
+        "marks": {
+            "Task-1": 7,
+            "Remarks 1": "Well done",
+            "Task-2": 8,
+            "Remarks 2": "Well done!",
+            "Task-3": 0,
+            "Remarks 3": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02060",
+        "name": "T.Durga Prasad",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Malpractice",
+            "Task-2": 7,
+            "Remarks 2": "Well done!",
+            "Task-3": 7,
+            "Remarks 3": "Well done!"
+        }
+    },
+    {
+        "id": "CPB02061",
+        "name": "Prashanth Tunniki",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Malpractice",
+            "Task-2": 8,
+            "Remarks 2": "Well done!"
+        }
+    },
+    {
+        "id": "CPB02062",
+        "name": "Sudhakar",
+        "marks": {
+            "Task-1": 7,
+            "Remarks 1": "Well done"
+        }
+    },
+    {
+        "id": "CPB02063",
+        "name": "M.Naveen Kumar",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02064",
+        "name": "Bhavya",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02065",
+        "name": "Nishitha",
+        "marks": {
+            "Task-1": 6,
+            "Remarks 1": "Presentation of the document is not upto the mark.\nKeep up the good work!",
+            "Task-2": 7,
+            "Remarks 2": "Well done!"
+        }
+    },
+    {
+        "id": "CPB02066",
+        "name": "Naveen K",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02067",
+        "name": "Sai Koushik",
+        "marks": {
+            "Task-1": 8,
+            "Remarks 1": "Well done"
+        }
+    },
+    {
+        "id": "CPB02068",
+        "name": "Naresh K",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02069",
+        "name": "Sumanth kumar reddy",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Access  not given"
+        }
+    },
+    {
+        "id": "CPB02070",
+        "name": "T sathish ",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted"
+        }
+    },
+    {
+        "id": "CPB02071",
+        "name": "Harsha vardhan A",
+        "marks": {
+            "Task-1": 0,
+            "Remarks 1": "Not submitted"
+        }
+    }
+];
+        function fetchStudentDetails() {
+            const studentId = document.getElementById('student-id').value;
+            const student = students.find(s => s.id === studentId);
+
+            const detailsDiv = document.getElementById('student-details');
+            detailsDiv.innerHTML = '';
+
+            if (student) {
+                const studentDetails = `
+                    <h2>${student.name}</h2>
+                    <p><strong>ID:</strong> ${student.id}</p>
+                    <h3>Marks</h3>
+                    <ul>
+                        ${Object.entries(student.marks).map(([subject, mark]) => `<li>${subject}: ${mark}</li>`).join('')}
+                    </ul>
+                `;
+                detailsDiv.innerHTML = studentDetails;
+            } else {
+                detailsDiv.innerHTML = '<p>Student not found.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
